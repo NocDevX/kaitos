@@ -1,56 +1,33 @@
 <template>
-    <h2>Authentication</h2>
-    <div class="buttons">
-        <button role="button" class="btn" @click="authenticate">Authorize</button>
-        <button role="button" class="btn" @click="logout">Logout</button>
-        <router-link class="btn" to="/">Home</router-link>
+    <div class="container">
+        <TheLogin @login="setLoginState" v-if="login" />
+        <TheRegister @login="setLoginState" v-if="!login" />
     </div>
 </template>
 
 <style>
-h2 {
-    text-align: center;
-}
-
-.buttons {
-    display: flex;
-    justify-content: center;
-}
-
-.btn {
-    font-size: 1rem;
-    margin: auto 0.6rem;
-    padding: 1rem;
-    border: 1px solid #333;
-    color: #efefef;
-    background: blueviolet;
-    cursor: pointer;
-    text-decoration: none;
-}
-
-.btn:active {
-    background: purple;
-}
-
-.d-flex {
-    display: flex;
+.container {
+    background: #333;
 }
 </style>
 
 <script>
+import TheLogin from '../components/Auth/TheLogin.vue';
+import TheRegister from '../components/Auth/TheRegister.vue';
+
 export default {
+    components: {
+        TheLogin,
+        TheRegister,
+    },
     data() {
-        return { users: [] };
+        return {
+            login: true,
+        };
     },
     methods: {
-        authenticate: function () {
-            window.localStorage.setItem('authenticated', true);
-            window.location.href = window.location.origin;
-            alert('Logged in!');
-        },
-        logout: function () {
-            window.localStorage.removeItem('authenticated');
-            alert('Logged out!');
+        setLoginState(state) {
+            this.login = state;
         },
     },
 };

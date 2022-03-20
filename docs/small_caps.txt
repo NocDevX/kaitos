@@ -4,3 +4,4 @@
 - Importação de dados via tsv, csv ou arquivos do gênero
 - Importação de dados via corretoras
 - Risco de ativos
+- Gráficos com rentabilidade relativa à índices

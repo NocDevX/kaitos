@@ -5,8 +5,9 @@ Ideia inicial:
     - Porcentagem de lucros/perdas até o momento
     - Valor de lucros/perdas em fiat
     - Sumário de valores investidos e filtros por categoria
-    - Relatórios por período, tipo, carteira etc.
-    - Valor de proventos recebidos até o momento.
+    - Relatórios por período, tipo, carteira etc
+    - Valor de proventos recebidos até o momento
+    - Resumo diário, mensal e anual
     
 
 Estrutura básica:
