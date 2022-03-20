@@ -1,14 +1,31 @@
 <template>
     <div class="register">
+        <a href="/"><img src="../../assets/img/logo.png" class="logo" /></a>
+
         <div class="register-container">
             <div class="register-title">
-                <h2>Cadastre-se</h2>
+                <h2 class="title">Crie sua conta</h2>
                 <span
-                    >Já possui conta? <span class="btn" @click="$emit('login', true)">Faça login</span>
+                    >Já possui conta?
+                    <span class="btn" @click="$emit('switchComponent', 'TheLogin')">Login</span>
                 </span>
             </div>
 
-            <form action="" class="register-form">dame</form>
+            <AuthWithService type="register" />
+
+            <hr />
+
+            <div class="form-container">
+                <form action="/login" class="register-form">
+                    <input type="text" class="input" name="username" placeholder="Nome de usuário" />
+
+                    <input type="text" class="input" name="email" placeholder="Email" />
+
+                    <input type="password" class="input" name="password" placeholder="Senha" />
+                </form>
+
+                <button class="register-btn">Cadastrar</button>
+            </div>
         </div>
     </div>
 </template>
@@ -16,41 +33,116 @@
 <style scoped>
 .register {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: flex-end;
+    position: absolute;
     width: 100%;
-    height: 100vh;
+    height: 100%;
+}
+
+.logo {
+    width: 20rem;
+    margin: 2rem auto 2rem auto;
 }
 
 .register-container {
     display: flex;
+    justify-content: center;
     flex-direction: column;
-    background: #efefef;
+    background-color: #fff;
     border-radius: 0.6rem;
-    padding: 1rem 2rem;
-    margin-right: 6rem;
-    height: 65%;
-    width: 50%;
+    height: 70%;
+    width: 85%;
+    box-shadow: 0 0 20px 2px #bbb;
 }
 
 .register-title {
+    align-self: center;
     line-height: 0.6rem;
     margin-bottom: 1rem;
 }
 
-.register-form {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
+.title {
+    text-align: center;
+}
+
+hr {
+    height: 1px;
+    width: 80%;
+    border: 0;
+    background-color: #ddd;
 }
 
 .btn {
-    color: plum;
+    color: var(--kaitos-mid-purple);
     cursor: pointer;
 }
 
 .btn:hover {
     text-decoration: underline;
 }
+
+.form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.register-form {
+    width: 100%;
+}
+
+.input {
+    display: block;
+    border: 1px solid #bbb;
+    outline: 0;
+    border-radius: 0.3rem;
+    padding: 0.6rem;
+    margin: 0.6rem auto;
+    width: 80%;
+}
+
+.input:focus {
+    border-color: var(--kaitos-dark-purple);
+}
+
+.register-btn {
+    margin-top: 1rem;
+    padding: 0.6rem;
+    width: 80%;
+    border: 1px solid var(--kaitos-mid-purple);
+    border-radius: 0.4rem;
+    background: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.register-btn:hover {
+    background-color: var(--kaitos-mid-purple);
+    border-color: 0;
+    color: white;
+}
+
+.register-btn:active {
+    background-color: var(--kaitos-dark-purple);
+}
+
+@media (min-width: 768px) and (min-height: 600px) {
+    .register {
+        height: 100%;
+    }
+    .register-container {
+        width: 30%;
+    }
+}
 </style>
+
+<script>
+import AuthWithService from './AuthWithService.vue';
+
+export default {
+    components: {
+        AuthWithService,
+    },
+};
+</script>

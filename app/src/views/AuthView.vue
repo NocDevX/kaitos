@@ -1,13 +1,34 @@
 <template>
     <div class="container">
-        <TheLogin @login="setLoginState" v-if="login" />
-        <TheRegister @login="setLoginState" v-if="!login" />
+        <Transition name="slide-left">
+            <component :is="activeComponent" @switch-component="setActiveComponent"></component>
+        </Transition>
     </div>
 </template>
 
-<style>
+<style scoped>
 .container {
-    background: #333;
+    background-color: #efefef;
+    position: absolute;
+    overflow: hidden;
+    width: 100vw;
+    height: 100vh;
+}
+.slide-left-enter-active {
+    transition: all 0.3s ease-out;
+}
+
+.slide-left-leave-active {
+    transition: all 0.3s;
+}
+
+.slide-left-leave-to {
+    opacity: 0;
+}
+
+.slide-left-enter-from {
+    transform: translateX(30px);
+    opacity: 0;
 }
 </style>
 
@@ -22,12 +43,13 @@ export default {
     },
     data() {
         return {
-            login: true,
+            transition: 'slide-left',
+            activeComponent: 'TheLogin',
         };
     },
     methods: {
-        setLoginState(state) {
-            this.login = state;
+        setActiveComponent(componentName) {
+            this.activeComponent = componentName;
         },
     },
 };

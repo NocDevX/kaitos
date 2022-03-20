@@ -8,6 +8,8 @@ Ideia inicial:
     - Relatórios por período, tipo, carteira etc
     - Valor de proventos recebidos até o momento
     - Resumo diário, mensal e anual
+    - Planejamento de carteira; Porcentagem por tipo de ativo
+    - Meta de valor investido em cada tipo de ativo
     
 
 Estrutura básica:
