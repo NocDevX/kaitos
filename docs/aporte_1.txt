@@ -1,0 +1,19 @@
+Ideia inicial:
+    - Aplicação que recebe e trata dados de investimentos providos manualmente
+    - Sistema simples de login
+    - API para forecer valores atuais de ativos, fiat e afins
+    - Porcentagem de lucros/perdas até o momento
+    - Valor de lucros/perdas em fiat
+    - Sumário de valores investidos e filtros por categoria
+    - Relatórios por período, tipo, carteira etc.
+    - Valor de proventos recebidos até o momento.
+    
+
+Estrutura básica:
+    - Usuário tem:
+        - N Carteiras, que tem:
+            - N transações
+
+
+Todo:
+    - Diagrama ER da base.

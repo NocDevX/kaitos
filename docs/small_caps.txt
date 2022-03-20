@@ -1,0 +1,6 @@
+- Gráficos para representação visual
+- Opção de selecionar moeda base para cálculos
+- Tema escuro/claro
+- Importação de dados via tsv, csv ou arquivos do gênero
+- Importação de dados via corretoras
+- Risco de ativos
