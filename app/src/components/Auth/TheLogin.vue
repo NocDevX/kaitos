@@ -1,7 +1,5 @@
 <template>
     <div class="login">
-        <a href="/"><img src="../../assets/img/logo.png" class="logo" /></a>
-
         <div class="login-container">
             <div class="login-title">
                 <h2 class="title">Entre em sua conta</h2>
@@ -11,7 +9,7 @@
                 </span>
             </div>
 
-            <AuthWithService type="login"/>
+            <AuthWithService type="login" />
 
             <hr />
 
@@ -24,7 +22,7 @@
 
                 <small><a href="#" class="btn">Esqueceu sua senha?</a></small>
 
-                <button class="login-btn">Entrar</button>
+                <button class="login-btn" @click="login">Entrar</button>
             </div>
         </div>
     </div>
@@ -38,11 +36,6 @@
     position: absolute;
     width: 100%;
     height: 100%;
-}
-
-.logo {
-    width: 20rem;
-    margin: 2rem auto 2rem auto;
 }
 
 .login-container {
@@ -75,7 +68,7 @@ hr {
 }
 
 .btn {
-    color: var(--kaitos-mid-purple);
+    color: var(--kaitos-purple-3);
     cursor: pointer;
 }
 
@@ -105,28 +98,28 @@ hr {
 }
 
 .input:focus {
-    border-color: var(--kaitos-dark-purple);
+    border-color: var(--kaitos-purple-5);
 }
 
 .login-btn {
     margin-top: 1rem;
     padding: 0.6rem;
     width: 80%;
-    border: 1px solid var(--kaitos-mid-purple);
+    border: 1px solid var(--kaitos-purple-3);
+    background-color: var(--kaitos-purple-3);
     border-radius: 0.4rem;
-    background: white;
+    color: white;
     cursor: pointer;
     transition: background-color 0.3s;
 }
 
 .login-btn:hover {
-    background-color: var(--kaitos-mid-purple);
+    background-color: var(--kaitos-purple-4);
     border-color: 0;
-    color: white;
 }
 
 .login-btn:active {
-    background-color: var(--kaitos-dark-purple);
+    background-color: var(--kaitos-purple-5);
 }
 
 @media (min-width: 768px) and (min-height: 600px) {
@@ -137,6 +130,12 @@ hr {
         width: 30%;
     }
 }
+
+@media (min-height: 800px) {
+    .login-container {
+        width: 80%;
+    }
+}
 </style>
 
 <script>
@@ -145,6 +144,14 @@ import AuthWithService from './AuthWithService.vue';
 export default {
     components: {
         AuthWithService,
+    },
+    methods: {
+        login() {
+            let expireTime = new Date(Date.now() + 1000 * (60 * 10)).toUTCString();
+            document.cookie = `authenticated=true;expires=${expireTime}`;
+
+            alert('Logged In!');
+        },
     },
 };
 </script>

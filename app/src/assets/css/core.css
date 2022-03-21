@@ -1,12 +1,22 @@
 :root {
-    --kaitos-mid-purple: #9d4edd;
-    --kaitos-light-purple: #e0aaff;
-    --kaitos-dark-purple: #5a189a;
+    --kaitos-purple-1: #e0aaff;
+    --kaitos-purple-2: #c77dff;
+    --kaitos-purple-3: #9d4edd;
+    --kaitos-purple-4: #7b2cbf;
+    --kaitos-purple-5: #5a189a;
+    --kaitos-purple-6: #3c096c;
+    --kaitos-purple-7: #240046;
+    --kaitos-purple-8: #10002b;
 }
 
 * {
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     box-sizing: border-box;
+}
+
+*::selection {
+    background-color: var(--kaitos-purple-3);
+    color: white;
 }
 
 body {

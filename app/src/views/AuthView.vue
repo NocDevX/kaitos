@@ -1,5 +1,7 @@
 <template>
     <div class="container">
+        <a href="/"><img src="../assets/img/logo.png" class="logo" /></a>
+
         <Transition name="slide-left">
             <component :is="activeComponent" @switch-component="setActiveComponent"></component>
         </Transition>
@@ -13,6 +15,13 @@
     overflow: hidden;
     width: 100vw;
     height: 100vh;
+    min-height: 600px;
+}
+
+.logo {
+    width: 20rem;
+    margin: 2rem auto 2rem auto;
+    display: block;
 }
 .slide-left-enter-active {
     transition: all 0.3s ease-out;

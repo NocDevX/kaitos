@@ -1,7 +1,5 @@
 <template>
     <div class="register">
-        <a href="/"><img src="../../assets/img/logo.png" class="logo" /></a>
-
         <div class="register-container">
             <div class="register-title">
                 <h2 class="title">Crie sua conta</h2>
@@ -40,16 +38,12 @@
     height: 100%;
 }
 
-.logo {
-    width: 20rem;
-    margin: 2rem auto 2rem auto;
-}
-
 .register-container {
     display: flex;
     justify-content: center;
     flex-direction: column;
     background-color: #fff;
+    overflow: auto;
     border-radius: 0.6rem;
     height: 70%;
     width: 85%;
@@ -74,7 +68,7 @@ hr {
 }
 
 .btn {
-    color: var(--kaitos-mid-purple);
+    color: var(--kaitos-purple-3);
     cursor: pointer;
 }
 
@@ -103,28 +97,28 @@ hr {
 }
 
 .input:focus {
-    border-color: var(--kaitos-dark-purple);
+    border-color: var(--kaitos-purple-5);
 }
 
 .register-btn {
     margin-top: 1rem;
     padding: 0.6rem;
     width: 80%;
-    border: 1px solid var(--kaitos-mid-purple);
+    border: 1px solid var(--kaitos-purple-3);
+    background-color: var(--kaitos-purple-3);
     border-radius: 0.4rem;
-    background: white;
+    color: white;
     cursor: pointer;
     transition: background-color 0.3s;
 }
 
 .register-btn:hover {
-    background-color: var(--kaitos-mid-purple);
+    background-color: var(--kaitos-purple-4);
     border-color: 0;
-    color: white;
 }
 
 .register-btn:active {
-    background-color: var(--kaitos-dark-purple);
+    background-color: var(--kaitos-purple-5);
 }
 
 @media (min-width: 768px) and (min-height: 600px) {
@@ -133,6 +127,12 @@ hr {
     }
     .register-container {
         width: 30%;
+    }
+}
+
+@media (min-height: 800px) {
+    .register-container {
+        width: 80%;
     }
 }
 </style>
