@@ -2,12 +2,14 @@
     <div class="register-options">
         <button class="facebook">
             <b v-if="type === 'login'">Entrar com Facebook</b>
-            <b v-else-if="type === 'register'">Cadastrar com Facebook</b>
+            <b v-if="type === 'register'">Cadastrar com Facebook</b>
+            <b v-if="type === undefined || type === ''">Autenticar com Facebook</b>
         </button>
 
         <button class="google">
             <b v-if="type === 'login'">Entrar com Google</b>
             <b v-if="type === 'register'">Cadastrar com Google</b>
+            <b v-if="type === undefined || type === ''">Autenticar com Google</b>
         </button>
     </div>
 </template>
