@@ -58,6 +58,7 @@
     border-radius: 0.6rem;
     width: 85%;
     height: 70%;
+    min-height: 400px;
     box-shadow: 0 0 20px 2px #bbb;
 }
 
@@ -96,6 +97,16 @@ hr {
 
 .auth-form {
     width: 100%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.label {
+    margin: 0.6rem auto;
+    width: 80%;
+    height: 10px;
+    display: block;
 }
 
 .input {

@@ -9,7 +9,11 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
   },
   "dependencies": {
+    "@vuelidate/core": "^2.0.0-alpha.41",
+    "@vuelidate/validators": "^2.0.0-alpha.29",
     "axios": "^0.26.1",
+    "jquery": "^3.6.0",
+    "toastify-js": "^1.11.2",
     "vue": "^3.2.29",
     "vue-router": "^4.0.12"
   },

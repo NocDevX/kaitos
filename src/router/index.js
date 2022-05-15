@@ -25,13 +25,11 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
     if (to.matched.some((record) => record.meta.requiresAuth)) {
-        if (window.getCookie('authenticated') === 'true') {
+        if (getCookie('XSRF-TOKEN') === false) {
+            next('/auth');
+        } else {
             next();
-            return;
         }
-
-        alert("Thou shan't be granted access whilst not logged in.");
-        next('/auth');
     } else {
         next();
     }
