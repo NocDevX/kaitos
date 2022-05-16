@@ -1,12 +1,16 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import HomeView from '../views/HomeView.vue';
 import AuthView from '../views/AuthView.vue';
+import NotFoundView from '../views/NotFoundView.vue';
 
 const routes = [
     {
         path: '/auth',
         name: 'auth',
         component: AuthView,
+        meta: {
+            redirectIfAuthenticated: true,
+        },
     },
     {
         path: '/',
@@ -15,6 +19,11 @@ const routes = [
         meta: {
             requiresAuth: true,
         },
+    },
+    {
+        path: '/:pathMatch(.*)*',
+        name: 'notFound',
+        component: NotFoundView,
     },
 ];
 
@@ -28,6 +37,10 @@ router.beforeEach((to, from, next) => {
         if (getCookie('XSRF-TOKEN') === false) {
             next('/auth');
         } else {
+            next();
+        }
+    } else if (to.matched.some((record) => record.meta.redirectIfAuthenticated)) {
+        if (getCookie('XSRF-TOKEN') === false) {
             next();
         }
     } else {

@@ -40,6 +40,10 @@ a {
 }
 
 /* Text */
+.text-dark {
+    color: #333;
+}
+
 .text-danger {
     color: var(--danger) !important;
 }
@@ -66,4 +70,9 @@ a {
 
 .align-self-start {
     align-self: flex-start;
+}
+
+/* Opacity */
+.opacity-0 {
+    opacity: 0;
 }

@@ -42,9 +42,7 @@
 
                     <small><a href="#" class="btn">Esqueceu sua senha?</a></small>
 
-                    <button class="auth-btn" @click="login($event)">
-                        Entrar
-                    </button>
+                    <button class="auth-btn" @click="login($event)">Entrar</button>
                 </form>
             </div>
         </div>
@@ -54,14 +52,16 @@
 <script>
 import AuthWithService from './AuthWithService.vue';
 import useVuelidate from '@vuelidate/core';
-import { required, email, minLength } from '@vuelidate/validators';
+import { required, email } from '@vuelidate/validators';
 
 export default {
     components: {
         AuthWithService,
     },
     setup() {
-        return { v$: useVuelidate() };
+        return {
+            v$: useVuelidate(),
+        };
     },
     data() {
         return {
@@ -89,7 +89,7 @@ export default {
             event.preventDefault();
 
             let toastOptions = {
-                duration: 3000,
+                duration: 4000,
                 close: true,
                 gravity: 'top',
                 position: 'right',

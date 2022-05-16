@@ -8,8 +8,8 @@
     </div>
 </template>
 
-<style>
-.container {
+<style scoped>
+::v-deep .container {
     background-color: #efefef;
     position: absolute;
     overflow: hidden;
@@ -18,7 +18,7 @@
     height: 100vh;
 }
 
-.logo {
+::v-deep .logo {
     width: 20rem;
     margin: 2rem auto 2rem auto;
     display: block;
@@ -40,16 +40,17 @@
     opacity: 0;
 }
 
-.auth {
+::v-deep .auth {
     display: flex;
     flex-direction: column;
     align-items: center;
     position: absolute;
     width: 100%;
     height: 100%;
+    min-width: 380px;
 }
 
-.auth-container {
+::v-deep .auth-container {
     display: flex;
     justify-content: center;
     flex-direction: column;
@@ -57,59 +58,59 @@
     overflow: auto;
     border-radius: 0.6rem;
     width: 85%;
-    height: 70%;
+    height: 100%;
     min-height: 400px;
     box-shadow: 0 0 20px 2px #bbb;
 }
 
-.auth-title {
+::v-deep .auth-title {
     align-self: center;
     line-height: 0.6rem;
     margin-bottom: 1rem;
 }
 
-.title {
+::v-deep .title {
     text-align: center;
 }
 
-hr {
+::v-deep hr {
     height: 1px;
     width: 80%;
     border: 0;
     background-color: #ddd;
 }
 
-.btn {
+::v-deep .btn {
     color: var(--kaitos-purple-3);
     cursor: pointer;
 }
 
-.btn:hover {
+::v-deep .btn:hover {
     text-decoration: underline;
 }
 
-.form-container {
+::v-deep .form-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
 }
 
-.auth-form {
+::v-deep .auth-form {
     width: 100%;
     display: flex;
     align-items: center;
     flex-direction: column;
 }
 
-.label {
+::v-deep .label {
     margin: 0.6rem auto;
     width: 80%;
     height: 10px;
     display: block;
 }
 
-.input {
+::v-deep .input {
     display: block;
     border: 1px solid #bbb;
     outline: 0;
@@ -119,11 +120,11 @@ hr {
     width: 80%;
 }
 
-.input:focus {
+::v-deep .input:focus {
     border-color: var(--kaitos-purple-5);
 }
 
-.auth-btn {
+::v-deep .auth-btn {
     margin-top: 1rem;
     padding: 0.6rem;
     width: 80%;
@@ -135,59 +136,59 @@ hr {
     transition: background-color 0.3s;
 }
 
-.auth-btn:hover {
+::v-deep .auth-btn:hover {
     background-color: var(--kaitos-purple-4);
     border-color: 0;
 }
 
-.auth-btn:active {
+::v-deep .auth-btn:active {
     background-color: var(--kaitos-purple-5);
 }
 
 @media (min-height: 700px) {
-    .auth-container {
+    ::v-deep .auth-container {
         height: 60%;
     }
 }
 
 @media (min-height: 1000px) {
-    .auth-container {
+    ::v-deep .auth-container {
         height: 40%;
     }
 }
 
 @media (min-width: 500px) {
-    .auth-container {
+    ::v-deep .auth-container {
         width: 60%;
     }
 }
 
 @media (min-width: 768px) {
-    .auth-container {
+    ::v-deep .auth-container {
         width: 50%;
     }
 }
 
 @media (min-width: 1000px) {
-    .auth-container {
+    ::v-deep .auth-container {
         width: 45%;
     }
 }
 
 @media (min-width: 1280px) {
-    .auth-container {
+    ::v-deep .auth-container {
         width: 30%;
     }
 }
 
 @media (min-width: 1600px) {
-    .auth-container {
+    ::v-deep .auth-container {
         width: 20%;
     }
 }
 
 @media (min-width: 2000px) {
-    .auth-container {
+    ::v-deep .auth-container {
         width: 20%;
     }
 }
