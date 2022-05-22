@@ -9,7 +9,7 @@ const routes = [
         name: 'auth',
         component: AuthView,
         meta: {
-            redirectIfAuthenticated: true,
+            denyAuthenticated: true,
         },
     },
     {
@@ -34,14 +34,16 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
     if (to.matched.some((record) => record.meta.requiresAuth)) {
-        if (getCookie('XSRF-TOKEN') === false) {
+        if (getCookie('UID') === false) {
             next('/auth');
         } else {
             next();
         }
-    } else if (to.matched.some((record) => record.meta.redirectIfAuthenticated)) {
-        if (getCookie('XSRF-TOKEN') === false) {
+    } else if (to.matched.some((record) => record.meta.denyAuthenticated)) {
+        if (getCookie('UID') === false) {
             next();
+        } else {
+            next('/');
         }
     } else {
         next();

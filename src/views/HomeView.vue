@@ -12,6 +12,7 @@ export default {
     methods: {
         logout() {
             document.cookie = 'XSRF-TOKEN=1;expires=' + new Date();
+            document.cookie = 'UID=1;expires=' + new Date();
 
             alert('logged Out');
 

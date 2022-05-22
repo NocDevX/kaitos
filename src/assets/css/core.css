@@ -53,6 +53,16 @@ a {
 }
 
 /* Toasts */
+.toastify {
+    overflow-wrap: break-word;
+}
+
+@media (max-width: 800px) {
+    .toastify {
+        max-width: 95% !important;
+    }
+}
+
 .toast-success {
     color: white !important;
     background: var(--success) !important;
@@ -75,4 +85,20 @@ a {
 /* Opacity */
 .opacity-0 {
     opacity: 0;
+}
+
+/* Display */
+.d-none {
+    display: none;
+}
+
+/* Margin */
+.ms-1 {
+    margin-right: .1rem;
+}
+.ms-2 {
+    margin-right: .2rem;
+}
+.ms-3 {
+    margin-right: .3rem;
 }

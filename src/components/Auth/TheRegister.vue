@@ -52,7 +52,16 @@
                         placeholder="Senha"
                         v-model="v$.form.password.$model"
                     />
-                    <button class="auth-btn" @click="register($event)">Cadastrar</button>
+
+                    <button class="auth-btn" @click="register($event)" :disabled="isLoading">
+                        <font-awesome-icon
+                            :class="{ 'd-none': !isLoading, 'ms-3': true }"
+                            :icon="['fas', 'spinner']"
+                            :spin="isLoading ? true : null"
+                        >
+                        </font-awesome-icon>
+                        Cadastrar
+                    </button>
                 </form>
             </div>
         </div>
@@ -80,6 +89,14 @@ export default {
                 name: '',
                 password: '',
             },
+            isLoading: false,
+            toastOptions: {
+                duration: 4000,
+                close: true,
+                gravity: 'top',
+                position: 'right',
+                stopOnFocus: true,
+            },
         };
     },
     validations() {
@@ -94,75 +111,80 @@ export default {
                 },
                 password: {
                     'A senha não pode estar vazia.': required,
-                    'A deve conter ao menos 12 caracteres.': minLength(12),
+                    'A senha deve conter ao menos 12 caracteres.': minLength(12),
                 },
             },
         };
     },
     methods: {
-        register(event) {
+        async register(event) {
             event.preventDefault();
 
-            let toastOptions = {
-                duration: 4000,
-                close: true,
-                gravity: 'top',
-                position: 'right',
-                stopOnFocus: true,
-            };
-
-            console.log(this.v$.form.$errors);
-
             if (this.v$.form.$invalid) {
-                toastOptions.text = 'O formulário está incompleto ou incorreto.';
-                toastOptions.className = 'toast-danger';
-                Toastify(toastOptions).showToast();
+                this.toastOptions.text = 'O formulário está incompleto ou incorreto.';
+                this.toastOptions.className = 'toast-danger';
 
-                return;
+                Toastify(this.toastOptions).showToast();
+                this.isLoading = false;
+
+                return false;
+            } else {
+                this.isLoading = true;
+                this.toastOptions.text = 'Cadastrando usuário...';
+                this.toastOptions.className = '';
+                Toastify(this.toastOptions).showToast();
             }
 
-            api.get('csrf_cookie').then(() => {
-                api.post('auth/register', {
+            const csrfCookie = api.get('csrf_cookie');
+            await csrfCookie;
+
+            const register = api
+                .post('auth/register', {
                     name: $('input[name=name]').val(),
                     password: $('input[name=password]').val(),
                     email: $('input[name=email]').val(),
                 })
-                    .then(() => {
-                        toastOptions.text = 'Usuário cadastrado!';
-                        toastOptions.className = 'toast-success';
+                .then(() => this.successfulRegister())
+                .catch(error => this.failedRegister(error));
 
-                        Toastify(toastOptions).showToast();
+            await register;
 
-                        this.$emit('switchComponent', 'TheLogin');
-                    })
-                    .catch((error) => {
-                        let responseData = error.response.data;
-                        toastOptions.className = 'toast-danger';
+            this.isLoading = false;
+        },
+        successfulRegister() {
+            this.toastOptions.text = 'Usuário cadastrado!';
+            this.toastOptions.className = 'toast-success';
 
-                        if (responseData.message) {
-                            toastOptions.text = responseData.message;
-                            Toastify(toastOptions).showToast();
-                        }
+            Toastify(this.toastOptions).showToast();
 
-                        let toastDuration = toastOptions.duration;
+            this.$emit('switchComponent', 'TheLogin');
+        },
+        failedRegister(error) {
+            let responseData = error.response.data;
+            let toastDuration = this.toastOptions.duration;
 
-                        if (typeof responseData === 'object' && !responseData.message) {
-                            const responseDataLength = Object.keys(responseData).length;
-                            const maxDuration = responseDataLength * toastOptions.duration;
-                            let dataCounter = 1;
+            this.toastOptions.className = 'toast-danger';
 
-                            for (let index in responseData) {
-                                toastDuration = maxDuration / dataCounter;
-                                dataCounter++;
+            if (responseData.message) {
+                this.toastOptions.text = responseData.message;
+                Toastify(this.toastOptions).showToast();
+            }
 
-                                toastOptions.text = responseData[index][0];
-                                toastOptions.duration = toastDuration;
+            if (typeof responseData === 'object' && !responseData.message) {
+                const responseDataLength = Object.keys(responseData).length;
+                const maxDuration = responseDataLength * this.toastOptions.duration;
+                let dataCounter = 1;
 
-                                Toastify(toastOptions).showToast();
-                            }
-                        }
-                    });
-            });
+                for (let index in responseData) {
+                    toastDuration = maxDuration / dataCounter;
+                    dataCounter++;
+
+                    this.toastOptions.text = responseData[index][0];
+                    this.toastOptions.duration = toastDuration;
+
+                    Toastify(this.toastOptions).showToast();
+                }
+            }
         },
     },
 };

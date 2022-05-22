@@ -42,7 +42,13 @@
 
                     <small><a href="#" class="btn">Esqueceu sua senha?</a></small>
 
-                    <button class="auth-btn" @click="login($event)">Entrar</button>
+                    <button class="auth-btn" @click="login($event)" :disabled="isLoading">
+                        <font-awesome-icon
+                            :class="{ 'd-none': !isLoading, 'ms-3': true }"
+                            :icon="['fas', 'spinner']"
+                            :spin="isLoading ? true : null"
+                        />Entrar
+                    </button>
                 </form>
             </div>
         </div>
@@ -53,6 +59,7 @@
 import AuthWithService from './AuthWithService.vue';
 import useVuelidate from '@vuelidate/core';
 import { required, email } from '@vuelidate/validators';
+import api from '../../assets/js/api';
 
 export default {
     components: {
@@ -68,6 +75,14 @@ export default {
             form: {
                 email: '',
                 password: '',
+            },
+            isLoading: false,
+            toastOptions: {
+                duration: 4000,
+                close: true,
+                gravity: 'top',
+                position: 'right',
+                stopOnFocus: true,
             },
         };
     },
@@ -85,73 +100,123 @@ export default {
         };
     },
     methods: {
-        login(event) {
+        async login(event) {
             event.preventDefault();
 
-            let toastOptions = {
-                duration: 4000,
-                close: true,
-                gravity: 'top',
-                position: 'right',
-                stopOnFocus: true,
-            };
+            this.isLoading = true;
 
             if (this.v$.form.$invalid) {
-                toastOptions.text = 'O formulário está incompleto ou incorreto.';
-                toastOptions.className = 'toast-danger';
-                Toastify(toastOptions).showToast();
+                this.toastOptions.text = 'O formulário está incompleto ou incorreto.';
+                this.toastOptions.className = 'toast-danger';
 
-                return;
+                Toastify(this.toastOptions).showToast();
+                this.isLoading = false;
+
+                return false;
+            } else {
+                this.isLoading = true;
+                this.toastOptions.text = 'Verificando credenciais...';
+                this.toastOptions.className = '';
+                Toastify(this.toastOptions).showToast();
             }
 
-            toastOptions.text = 'Verificando credenciais...';
-            Toastify(toastOptions).showToast();
+            const csrfCookie = api.get('csrf_cookie');
+            await csrfCookie;
 
-            api.get('csrf_cookie')
-                .then(() => {
-                    api.post('auth/login', {
-                        password: $('input[name=password]').val(),
-                        email: $('input[name=email]').val(),
-                    })
-                        .then(() => {
-                            let midnight = new Date();
-                            midnight.setHours(23, 59, 59, 0);
-
-                            toastOptions.text = 'Autenticado com sucesso!';
-                            toastOptions.className = 'toast-success';
-                            Toastify(toastOptions).showToast();
-
-                            this.$router.push({ name: 'home' });
-                        })
-                        .catch((error) => {
-                            let responseData = error.response.data;
-                            toastOptions.className = 'toast-danger';
-
-                            if (responseData.message) {
-                                toastOptions.text = responseData.message;
-                                Toastify(toastOptions).showToast();
-                            }
-
-                            let toastDuration = toastOptions.duration;
-
-                            if (typeof responseData === 'object' && !responseData.message) {
-                                const responseDataLength = Object.keys(responseData).length;
-                                const maxDuration = responseDataLength * toastOptions.duration;
-                                let dataCounter = 1;
-
-                                for (let index in responseData) {
-                                    toastDuration = maxDuration / dataCounter;
-                                    dataCounter++;
-
-                                    toastOptions.text = responseData[index][0];
-                                    toastOptions.duration = toastDuration;
-
-                                    Toastify(toastOptions).showToast();
-                                }
-                            }
-                        });
+            const login = api
+                .post('auth/login', {
+                    password: $('input[name=password]').val(),
+                    email: $('input[name=email]').val(),
                 })
-                .catch((e) => alert('Não foi possível autenticar a requisição com o servidor'));
+                .then(response => this.successfulLogin(response))
+                .catch(error => this.failedLogin(error));
+
+            await login;
+
+            this.isLoading = false;
+        },
+        successfulLogin(response) {
+            const uid = response.data.token ? response.data.token : '';
+
+            const midnight = new Date();
+            midnight.setHours(23, 59, 59, 0);
+
+            this.toastOptions.text = 'Autenticado com sucesso!';
+            this.toastOptions.className = 'toast-success';
+            Toastify(this.toastOptions).showToast();
+
+            document.cookie = `UID=${uid};expires=${midnight}`;
+
+            this.$router.push({ name: 'home' });
+        },
+        failedLogin(error) {
+            let responseData = error.response.data;
+            this.toastOptions.className = 'toast-danger';
+
+            if (responseData.message) {
+                this.toastOptions.text = responseData.message;
+                Toastify(this.toastOptions).showToast();
+            }
+
+            let toastDuration = this.toastOptions.duration;
+
+            if (typeof responseData === 'object' && !responseData.message) {
+                const responseDataLength = Object.keys(responseData).length;
+                const maxDuration = responseDataLength * this.toastOptions.duration;
+                let dataCounter = 1;
+
+                for (let index in responseData) {
+                    toastDuration = maxDuration / dataCounter;
+                    dataCounter++;
+
+                    this.toastOptions.text = responseData[index][0];
+                    this.toastOptions.duration = toastDuration;
+
+                    Toastify(this.toastOptions).showToast();
+                }
+            }
+        },
+        old() {
+            // await api
+            //     .get('csrf_cookie')
+            //     .then(() => {
+            //         api.post('auth/login', {
+            //             password: $('input[name=password]').val(),
+            //             email: $('input[name=email]').val(),
+            //         })
+            //             .then(() => {
+            //                 let midnight = new Date();
+            //                 midnight.setHours(23, 59, 59, 0);
+            //                 this.toastOptions.text = 'Autenticado com sucesso!';
+            //                 this.toastOptions.className = 'toast-success';
+            //                 Toastify(this.toastOptions).showToast();
+            //                 this.$router.push({ name: 'home' });
+            //             })
+            //             .catch((error) => {
+            //                 let responseData = error.response.data;
+            //                 this.toastOptions.className = 'toast-danger';
+            //                 if (responseData.message) {
+            //                     this.toastOptions.text = responseData.message;
+            //                     Toastify(this.toastOptions).showToast();
+            //                 }
+            //                 let toastDuration = this.toastOptions.duration;
+            //                 if (typeof responseData === 'object' && !responseData.message) {
+            //                     const responseDataLength = Object.keys(responseData).length;
+            //                     const maxDuration = responseDataLength * this.toastOptions.duration;
+            //                     let dataCounter = 1;
+            //                     for (let index in responseData) {
+            //                         toastDuration = maxDuration / dataCounter;
+            //                         dataCounter++;
+            //                         this.toastOptions.text = responseData[index][0];
+            //                         this.toastOptions.duration = toastDuration;
+            //                         Toastify(this.toastOptions).showToast();
+            //                     }
+            //                 }
+            //             });
+            //     })
+            //     .catch((e) => {
+            //         alert('Não foi possível autenticar a requisição com o servidor');
+            //     });
         },
     },
 };
