@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <img src="../assets/img/logo.png" class="logo" draggable="false"/>
+        <img src="../assets/img/logo.png" class="logo" draggable="false" />
 
         <Transition name="slide-left">
             <component :is="activeComponent" @switch-component="setActiveComponent"></component>
@@ -56,6 +56,7 @@
 
 :deep(.auth-title) {
     align-self: center;
+    text-align: center;
     line-height: 0.6rem;
     margin-bottom: 1rem;
 }
@@ -177,22 +178,18 @@
         width: 20%;
     }
 }
-
-@media (min-width: 2000px) {
-    :deep(.auth-container) {
-        width: 20%;
-    }
-}
 </style>
 
 <script>
 import TheLogin from '../components/Auth/TheLogin.vue';
 import TheRegister from '../components/Auth/TheRegister.vue';
+import ThePasswordRecovery from '../components/Auth/ThePasswordRecovery.vue';
 
 export default {
     components: {
         TheLogin,
         TheRegister,
+        ThePasswordRecovery,
     },
     data() {
         return {
