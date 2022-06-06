@@ -24,6 +24,9 @@ const routes = [
         path: '/:pathMatch(.*)*',
         name: 'notFound',
         component: NotFoundView,
+        meta: {
+            requiresAuth: true
+        }
     },
 ];
 
