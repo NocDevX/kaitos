@@ -7,9 +7,9 @@
                 <span class="btn" @click="$emit('switchComponent', 'TheRegister')">Cadastre-se</span>
             </div>
 
-            <AuthWithService type="login" />
+            <AuthWithService type="login"/>
 
-            <hr />
+            <hr/>
 
             <div class="form-container">
                 <form class="auth-form">
@@ -40,14 +40,22 @@
                         v-model="v$.form.password.$model"
                     />
 
-                    <small><a href="#" class="btn" @click="$emit('switchComponent', 'ThePasswordRecovery')">Esqueceu sua senha?</a></small>
+                    <small>
+                        <a
+                            href="#"
+                            class="btn"
+                            @click="$emit('switchComponent', 'ThePasswordRecovery')">
+                            Esqueceu sua senha?
+                        </a>
+                    </small>
 
                     <button class="auth-btn" @click="login($event)" :disabled="isLoading">
                         <font-awesome-icon
                             :class="{ 'd-none': !isLoading, 'ms-3': true }"
                             :icon="['fas', 'spinner']"
                             :spin="isLoading ? true : null"
-                        />Entrar
+                        />
+                        Entrar
                     </button>
                 </form>
             </div>
@@ -58,7 +66,7 @@
 <script>
 import AuthWithService from './AuthWithService.vue';
 import useVuelidate from '@vuelidate/core';
-import { required, email } from '@vuelidate/validators';
+import {required, email} from '@vuelidate/validators';
 
 export default {
     components: {
@@ -119,16 +127,27 @@ export default {
                 Toastify(this.toastOptions).showToast();
             }
 
-            const csrfCookie = api.get('csrf_cookie');
+            const csrfCookie = api
+                .get('csrf_cookie')
+                .catch(error => {
+                    this.$emit('failed-authentication', error)
+                    this.isLoading = false;
+                });
             await csrfCookie;
 
+            if (this.isLoading === false) {
+                return;
+            }
+
             const login = api
-                .post('auth/login', {
-                    password: $('input[name=password]').val(),
-                    email: $('input[name=email]').val(),
-                })
+                .post(
+                    'auth/login',
+                    {
+                        password: $('input[name=password]').val(),
+                        email: $('input[name=email]').val(),
+                    })
                 .then(response => this.successfulLogin(response))
-                .catch(error => this.failedLogin(error));
+                .catch(error => this.$emit('failed-authentication', error));
 
             await login;
 
@@ -142,38 +161,12 @@ export default {
 
             this.toastOptions.text = 'Autenticado com sucesso!';
             this.toastOptions.className = 'toast-success';
+            // eslint-disable-next-line no-undef
             Toastify(this.toastOptions).showToast();
 
             document.cookie = `UID=${uid};expires=${midnight}`;
 
-            this.$router.push({ name: 'home' });
-        },
-        failedLogin(error) {
-            let responseData = error.response.data;
-            this.toastOptions.className = 'toast-danger';
-
-            if (responseData.message) {
-                this.toastOptions.text = responseData.message;
-                Toastify(this.toastOptions).showToast();
-            }
-
-            let toastDuration = this.toastOptions.duration;
-
-            if (typeof responseData === 'object' && !responseData.message) {
-                const responseDataLength = Object.keys(responseData).length;
-                const maxDuration = responseDataLength * this.toastOptions.duration;
-                let dataCounter = 1;
-
-                for (let index in responseData) {
-                    toastDuration = maxDuration / dataCounter;
-                    dataCounter++;
-
-                    this.toastOptions.text = responseData[index][0];
-                    this.toastOptions.duration = toastDuration;
-
-                    Toastify(this.toastOptions).showToast();
-                }
-            }
+            this.$router.push({name: 'home'});
         },
     },
 };

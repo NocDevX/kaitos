@@ -1,9 +1,14 @@
 <template>
     <div class="container">
-        <img src="../assets/img/logo.png" class="logo" draggable="false" />
+        <img src="../assets/img/logo.png" alt="logo do site" class="logo" draggable="false"/>
 
         <Transition name="slide-left">
-            <component :is="activeComponent" @switch-component="setActiveComponent"></component>
+            <component
+                :is="activeComponent"
+                @switch-component="setActiveComponent"
+                @failed-authentication="failedAuthentication"
+            >
+            </component>
         </Transition>
     </div>
 </template>
@@ -14,6 +19,7 @@
     margin: 2rem auto 2rem auto;
     display: block;
 }
+
 .slide-left-enter-active {
     transition: all 0.3s ease-out;
 }
@@ -195,12 +201,61 @@ export default {
         return {
             transition: 'slide-left',
             activeComponent: 'TheLogin',
+            toastOptions: {
+                duration: 4000,
+                close: true,
+                gravity: 'top',
+                position: 'right',
+                stopOnFocus: true,
+            },
         };
     },
     methods: {
         setActiveComponent(componentName) {
             this.activeComponent = componentName;
         },
+        failedAuthentication(request) {
+            this.toastOptions.className = 'toast-danger';
+            let responseMessage = this.getRequestMessage(request);
+
+            if (responseMessage) {
+                this.toastOptions.text = responseMessage;
+                // eslint-disable-next-line no-undef
+                Toastify(this.toastOptions).showToast();
+                return;
+            }
+
+            let responseData = request.response.data;
+            let toastDuration = this.toastOptions.duration;
+
+            if (typeof responseData === 'object' && !responseData.message) {
+                const responseDataLength = Object.keys(responseData).length;
+                const maxDuration = responseDataLength * this.toastOptions.duration;
+                let dataCounter = 1;
+
+                for (let index in responseData) {
+                    toastDuration = maxDuration / dataCounter;
+                    dataCounter++;
+
+                    this.toastOptions.text = responseData[index][0];
+                    this.toastOptions.duration = toastDuration;
+
+                    // eslint-disable-next-line no-undef
+                    Toastify(this.toastOptions).showToast();
+                }
+            }
+        },
+        getRequestMessage(request) {
+            if (request.message !== undefined) {
+                return request.message;
+            }
+
+            if (request.response.data.message !== undefined) {
+                return request.response.data.message;
+            }
+
+            return false;
+        }
     },
 };
 </script>
