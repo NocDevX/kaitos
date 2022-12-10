@@ -7,6 +7,11 @@
     --kaitos-purple-6: #3c096c;
     --kaitos-purple-7: #240046;
     --kaitos-purple-8: #10002b;
+
+    --danger: #d62828;
+    --success: #38b000;
+    --warning: #f48c06;
+    --info: #8ecae6;
 }
 
 * {
@@ -29,6 +34,71 @@ a {
     text-decoration: none;
 }
 
-a:visited {
-    color: initial;
+/* Borders */
+.border-danger {
+    border-color: var(--danger) !important;
+}
+
+/* Text */
+.text-dark {
+    color: #333;
+}
+
+.text-danger {
+    color: var(--danger) !important;
+}
+
+.text-left {
+    text-align: left;
+}
+
+/* Toasts */
+.toastify {
+    overflow-wrap: break-word;
+}
+
+@media (max-width: 800px) {
+    .toastify {
+        max-width: 95% !important;
+    }
+}
+
+.toast-success {
+    color: white !important;
+    background: var(--success) !important;
+}
+
+.toast-danger {
+    color: white !important;
+    background: var(--danger) !important;
+}
+
+/* Flex */
+.justify-self-start {
+    justify-self: start;
+}
+
+.align-self-start {
+    align-self: flex-start;
+}
+
+/* Opacity */
+.opacity-0 {
+    opacity: 0;
+}
+
+/* Display */
+.d-none {
+    display: none;
+}
+
+/* Margin */
+.ms-1 {
+    margin-right: .1rem;
+}
+.ms-2 {
+    margin-right: .2rem;
+}
+.ms-3 {
+    margin-right: .3rem;
 }

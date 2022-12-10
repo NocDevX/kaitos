@@ -1,12 +1,16 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import HomeView from '../views/HomeView.vue';
 import AuthView from '../views/AuthView.vue';
+import NotFoundView from '../views/NotFoundView.vue';
 
 const routes = [
     {
         path: '/auth',
         name: 'auth',
         component: AuthView,
+        meta: {
+            denyAuthenticated: true,
+        },
     },
     {
         path: '/',
@@ -15,6 +19,14 @@ const routes = [
         meta: {
             requiresAuth: true,
         },
+    },
+    {
+        path: '/:pathMatch(.*)*',
+        name: 'notFound',
+        component: NotFoundView,
+        meta: {
+            requiresAuth: true
+        }
     },
 ];
 
@@ -25,13 +37,17 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
     if (to.matched.some((record) => record.meta.requiresAuth)) {
-        if (window.getCookie('authenticated') === 'true') {
+        if (getCookie('UID') === false) {
+            next('/auth');
+        } else {
             next();
-            return;
         }
-
-        alert("Thou shan't be granted access whilst not logged in.");
-        next('/auth');
+    } else if (to.matched.some((record) => record.meta.denyAuthenticated)) {
+        if (getCookie('UID') === false) {
+            next();
+        } else {
+            next('/');
+        }
     } else {
         next();
     }
