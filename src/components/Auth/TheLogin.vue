@@ -17,43 +17,43 @@
                         <small class="text-danger">{{ error.$validator }}</small>
                     </div>
                     <input
-                        type="text"
-                        :class="v$.form.email.$errors.length > 0 ? 'border-danger input' : 'input'"
-                        name="email"
-                        placeholder="Email"
-                        v-model="v$.form.email.$model"
+                            type="text"
+                            :class="v$.form.email.$errors.length > 0 ? 'border-danger input' : 'input'"
+                            name="email"
+                            placeholder="Email"
+                            v-model="v$.form.email.$model"
                     />
 
                     <div
-                        class="input-errors"
-                        v-for="(error, index) of v$.form.password.$errors"
-                        :key="index"
-                        style="width: 80%"
+                            class="input-errors"
+                            v-for="(error, index) of v$.form.password.$errors"
+                            :key="index"
+                            style="width: 80%"
                     >
                         <small class="text-danger">{{ error.$validator }}</small>
                     </div>
                     <input
-                        type="password"
-                        :class="v$.form.password.$errors.length > 0 ? 'border-danger input' : 'input'"
-                        name="password"
-                        placeholder="Senha"
-                        v-model="v$.form.password.$model"
+                            type="password"
+                            :class="v$.form.password.$errors.length > 0 ? 'border-danger input' : 'input'"
+                            name="password"
+                            placeholder="Senha"
+                            v-model="v$.form.password.$model"
                     />
 
                     <small>
                         <a
-                            href="#"
-                            class="btn"
-                            @click="$emit('switchComponent', 'ThePasswordRecovery')">
+                                href="#"
+                                class="btn"
+                                @click="$emit('switchComponent', 'ThePasswordRecovery')">
                             Esqueceu sua senha?
                         </a>
                     </small>
 
                     <button class="auth-btn" @click="login($event)" :disabled="isLoading">
                         <font-awesome-icon
-                            :class="{ 'd-none': !isLoading, 'ms-3': true }"
-                            :icon="['fas', 'spinner']"
-                            :spin="isLoading ? true : null"
+                                :class="{ 'd-none': !isLoading, 'ms-3': true }"
+                                :icon="['fas', 'spinner']"
+                                :spin="isLoading ? true : null"
                         />
                         Entrar
                     </button>
@@ -107,51 +107,22 @@ export default {
         };
     },
     methods: {
-        async login(event) {
-            event.preventDefault();
+        validateForm() {
+            const form = this.v$.form;
 
-            this.isLoading = true;
-
-            if (this.v$.form.$invalid) {
-                this.toastOptions.text = 'O formulário está incompleto ou incorreto.';
-                this.toastOptions.className = 'toast-danger';
-
-                Toastify(this.toastOptions).showToast();
-                this.isLoading = false;
-
-                return false;
-            } else {
-                this.isLoading = true;
+            if (!form.$invalid) {
                 this.toastOptions.text = 'Verificando credenciais...';
                 this.toastOptions.className = '';
                 Toastify(this.toastOptions).showToast();
+
+                return true;
             }
 
-            const csrfCookie = api
-                .get('csrf_cookie')
-                .catch(error => {
-                    this.$emit('failed-authentication', error)
-                    this.isLoading = false;
-                });
-            await csrfCookie;
+            this.toastOptions.text = 'O formulário está incompleto ou incorreto.';
+            this.toastOptions.className = 'toast-danger';
+            Toastify(this.toastOptions).showToast();
 
-            if (this.isLoading === false) {
-                return;
-            }
-
-            const login = api
-                .post(
-                    'auth/login',
-                    {
-                        password: $('input[name=password]').val(),
-                        email: $('input[name=email]').val(),
-                    })
-                .then(response => this.successfulLogin(response))
-                .catch(error => this.$emit('failed-authentication', error));
-
-            await login;
-
-            this.isLoading = false;
+            return false;
         },
         successfulLogin(response) {
             const uid = response.data.token ? response.data.token : '';
@@ -161,12 +132,47 @@ export default {
 
             this.toastOptions.text = 'Autenticado com sucesso!';
             this.toastOptions.className = 'toast-success';
-            // eslint-disable-next-line no-undef
             Toastify(this.toastOptions).showToast();
 
             document.cookie = `UID=${uid};expires=${midnight}`;
 
             this.$router.push({name: 'home'});
+        },
+        async login(event) {
+            event.preventDefault();
+            this.isLoading = true;
+
+            if (!this.validateForm()) {
+                return this.isLoading = false;
+            }
+
+            if (!(await this.getAuthCookie())) {
+                return this.isLoading = false;
+            }
+
+            await api
+                .post(
+                    'auth/login',
+                    {
+                        password: $('input[name=password]').val(),
+                        email: $('input[name=email]').val(),
+                    })
+                .then(response => this.successfulLogin(response))
+                .catch(error => this.$emit('failed-authentication', error));
+
+            this.isLoading = false;
+        },
+        async getAuthCookie() {
+            let successfulRequest = false;
+
+            await api
+                .get('csrf_cookie')
+                .then(() => successfulRequest = true)
+                .catch((error) => {
+                    this.$emit('failed-authentication', error)
+                });
+
+            return successfulRequest
         },
     },
 };
