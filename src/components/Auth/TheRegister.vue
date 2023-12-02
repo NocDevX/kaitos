@@ -159,8 +159,8 @@ export default {
 
             this.$emit('switchComponent', 'TheLogin');
         },
-        failedRegister(error) {
-            let responseData = error.response.data;
+        failedRegister(request) {
+            let responseData = request.response.data;
             let toastDuration = this.toastOptions.duration;
 
             this.toastOptions.className = 'toast-danger';

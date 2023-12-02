@@ -220,7 +220,6 @@ export default {
 
             if (responseMessage) {
                 this.toastOptions.text = responseMessage;
-                // eslint-disable-next-line no-undef
                 Toastify(this.toastOptions).showToast();
                 return;
             }
@@ -240,18 +239,17 @@ export default {
                     this.toastOptions.text = responseData[index][0];
                     this.toastOptions.duration = toastDuration;
 
-                    // eslint-disable-next-line no-undef
                     Toastify(this.toastOptions).showToast();
                 }
             }
         },
         getRequestMessage(request) {
-            if (request.message !== undefined) {
-                return request.message;
-            }
-
             if (request.response.data.message !== undefined) {
                 return request.response.data.message;
+            }
+
+            if (request.message !== undefined) {
+                return request.message;
             }
 
             return false;
